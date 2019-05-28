@@ -5,9 +5,16 @@ import { isNumber, isString, isObject } from 'util';
   providedIn: 'root'
 })
 export class DiscoService {
+  
   generos = [];
   artistas = [];
   musicas = [];
+  listaDeGenero = [];
+  addgenero = 0;
+  addnome = null;
+  listaDeFavoritos = [];
+
+
 
   constructor() {
     this.adicionarGenero('Samba de Raiz');
@@ -33,7 +40,82 @@ export class DiscoService {
     this.adicionarMusica('Fotografia', ['Elis Regina', 'Antônio Carlos Jobim'], 'Bossa Nova');
     this.adicionarMusica('Pela luz dos olhos teus', ['Antônio Carlos Jobim', 'Miúcha'], 'Bossa Nova');
 
+  };
+  pesquisar(pesquisa) {
+    let busca = [];
+    for (let musica of this.musicas) {
+      if (musica.titulo.indexOf(pesquisa) != -1) {
+        busca.push(musica);
+      }
+    }
+    return busca;
+  };
+  pegarGeneros(nome, id) {
+    this.addnome = nome;
+    this.addgenero = id;
+  };
+  
+  apresenta(){
+    return true;
   }
+  like(musica) {
+    for (let titulomusica of this.musicas) {
+      if (titulomusica.titulo === musica) {
+        if (titulomusica.gostar < 1) {
+          titulomusica.gostar += 1;
+          this.apresenta();
+        };
+        if (titulomusica.nGostar > 0) {
+          titulomusica.nGostar -= 1;
+        }
+      }
+    };
+    
+  };
+  naoGostar(musica) {
+    for (let titulomusica of this.musicas) {
+      if (titulomusica.titulo === musica) {
+        if (titulomusica.nGostar < 1) {
+          titulomusica.nGostar += 1;
+        }
+        if (titulomusica.gostar > 0) {
+          titulomusica.gostar -= 1;
+        }
+      }
+    };
+  };
+
+
+  listarmusicaporgenero() {
+    const l = [];
+    for (let musica of this.musicas) {
+      if (musica.idGenero == this.addgenero) {
+        const g = {
+          id: musica.id,
+          titulo: musica.titulo
+        }
+        l.push(g);
+      }
+    }
+    return l;
+  };
+
+
+  listarMusicaArtista() {
+    const l = [];
+    for (let musica of this.musicas) {
+      if (musica.idGenero == this.addgenero) {
+        const g = {
+          id: musica.id,
+          titulo: musica.titulo
+        }
+        l.push(g);
+      }
+    }
+
+  };
+
+
 
   /**
    * Encontra e retorna um gênero na lista de gêneros com base no nome.
@@ -43,6 +125,7 @@ export class DiscoService {
   encontrarGeneroPorNome(nome) {
     return this.generos.find(genero => genero.nome == nome);
   }
+
 
   /**
    * Encontra e retorna um gênero da lista de gêneros.
@@ -129,7 +212,9 @@ export class DiscoService {
       id: this.musicas.length + 1,
       titulo,
       idGenero: g.id,
-      artistas: listaArtistas
+      artistas: listaArtistas,
+      gostar: 0,
+      nGostar: 0
     };
     this.musicas.push(musica);
     return musica;

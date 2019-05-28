@@ -8,9 +8,11 @@ import { DiscoService } from '../disco.service';
 })
 export class MusicasComponent implements OnInit {
   generos = [];
-
   constructor(private disco: DiscoService) { }
+  salvarGenero(nome,id){ 
+    this.disco.pegarGeneros(nome,id);
 
+  }
   ngOnInit() {
     this.generos = this.disco.listaDeGeneros();
   }
